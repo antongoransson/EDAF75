@@ -55,7 +55,7 @@ public class MovieGUI {
 		
 		/* --- change code here --- */
 		/* --- use the name of your own database file --- */
-		if (db.openConnection("lab2.db")) {
+		if (db.openConnection("movies.db")) {
 			userLoginPane.displayMessage("Connected to database");
 		} else {
 			userLoginPane.displayMessage("Could not connect to database");
