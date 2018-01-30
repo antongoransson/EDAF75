@@ -239,6 +239,7 @@ public class BookingPane extends BasicPane {
             fields[MOVIE_NAME].setText(show.getMovieName());
             fields[THEATER_NAME].setText(show.getTheaterName());
             fields[PERF_DATE].setText(show.getShowdate());
+            fields[FREE_SEATS].setText(Integer.toString(db.getFreeSeats(show.getTheaterName(), show.getShowdate())));
         }
     }
 

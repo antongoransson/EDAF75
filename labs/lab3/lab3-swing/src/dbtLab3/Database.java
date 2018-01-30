@@ -136,16 +136,14 @@ public class Database {
         int seats = 0;
         String query =
                 "SELECT  * \n" +
-                        "FROM    theaters \n" +
-                        "WHERE name = ?\n";
+                "FROM    theaters \n" +
+                "WHERE name = ?\n";
         try (PreparedStatement ps = conn.prepareStatement(query)) {
             ps.setString(1, theaterName);
             ResultSet rs = ps.executeQuery();
             while(rs.next())
                 seats = rs.getInt("seats");
             int nbr = getNumberOfReservations(theaterName, date);
-            System.out.println(seats);
-            System.out.println(nbr);
             return seats - nbr;
         } catch (SQLException e) {
             e.printStackTrace();

@@ -71,11 +71,30 @@ VALUES  ("BorrbyBion", 5), ("Royal Malmö", 7), ("IMAX Ystad", 3),
 INSERT
 INTO    shows (movie_name, theater_name, show_date)
 VALUES  ("Rädda valarna", "BorrbyBion", "2017-01-28"),
+        ("Rädda valarna", "Royal Malmö", "2017-01-29"),
+        ("Rädda valarna", "IMAX Ystad", "2017-01-30"),
+        ("Rädda valarna", "BorrbyBion", "2017-01-31"),
+        ("Rädda valarna", "HemmaBio StureP", "2017-01-26"),
         ("Hoppla pålle", "Royal Malmö", "2017-01-26"),
         ("Hoppla pålle", "IMAX Ystad", "2017-01-27"),
-        ("Rädda valarna", "HemmaBio StureP", "2017-01-26"),
-        ("Dokumentär om Borrby", "Royal Malmö", "2017-01-26");
-
+        ("Hoppla pålle", "Royal Malmö", "2017-01-28"),
+        ("Hoppla pålle", "IMAX Ystad", "2017-01-29"),
+        ("Hoppla pålle", "Royal Malmö", "2017-02-02"),
+        ("Hoppla pålle", "IMAX Ystad", "2017-01-30"),
+        ("Vi räddade valarna", "HemmaBio StureP", "2017-01-26"),
+        ("Vi räddade valarna", "Royal Malmö", "2017-01-28"),
+        ("Vi räddade valarna", "IMAX Ystad", "2017-01-30"),
+        ("Vi räddade valarna", "Royal Malmö", "2017-03-27"),
+        ("Vi räddade valarna", "IMAX Ystad", "2017-01-27"),
+        ("HOPPLA SNABBARE HÄSTJÄVEL", "Royal Malmö", "2017-01-28"),
+        ("HOPPLA SNABBARE HÄSTJÄVEL", "IMAX Ystad", "2017-01-30"),
+        ("HOPPLA SNABBARE HÄSTJÄVEL", "Royal Malmö", "2017-03-27"),
+        ("HOPPLA SNABBARE HÄSTJÄVEL", "IMAX Ystad", "2017-01-27"),
+        ("Dokumentär om Borrby", "BorrbyBion", "2017-01-28"),
+        ("Dokumentär om Borrby", "Royal Malmö", "2017-01-26"),
+        ("Dokumentär om Borrby", "IMAX Ystad", "2017-01-30"),
+        ("Dokumentär om Borrby", "BorrbyBion", "2017-01-31"),
+        ("Dokumentär om Borrby", "HemmaBio StureP", "2017-02-26");
 
 INSERT
 INTO    reservations (username, theater_name, movie_name, show_date)
