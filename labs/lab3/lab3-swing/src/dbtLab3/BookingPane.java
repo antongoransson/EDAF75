@@ -265,8 +265,11 @@ public class BookingPane extends BasicPane {
             String movieName = nameList.getSelectedValue();
             String date = dateList.getSelectedValue();
             if (db.getFreeSeats(fields[THEATER_NAME].getText(), fields[PERF_DATE].getText()) > 0) {
-                db.makeReservation(currentUserNameLabel.getText(), fields[THEATER_NAME].getText(), movieName, date);
-                displayMessage("Reservation made!");
+
+                displayMessage("Reservation made! Your numbers is " +
+                db.makeReservation(currentUserNameLabel.getText(), fields[THEATER_NAME].getText(), movieName, date));;
+                fields[FREE_SEATS].setText(Integer.toString(db.getFreeSeats(fields[THEATER_NAME].getText(), date)));
+
             } else
                 displayMessage("This show is fully boooked");
         }

@@ -174,17 +174,21 @@ public class Database {
                 "INSERT \n" +
                 "INTO reservations(username, theater_name, movie_name, show_date) \n" +
                 "VALUES(?, ?, ?, ?)\n";
-        try (PreparedStatement ps = conn.prepareStatement(query)) {
+        String id = "SELECT last_insert_rowid()";
+        try (PreparedStatement ps = conn.prepareStatement(query, new String []{"res_nbr"})) {
+            PreparedStatement psmt = conn.prepareStatement(id);
             ps.setString(1, username);
             ps.setString(2, movieName);
             ps.setString(3, theaterName);
             ps.setString(4, date);
             ps.executeUpdate();
+            ResultSet rs = psmt.executeQuery();
+            return rs.getInt(1);
+
         } catch (SQLException e) {
             e.printStackTrace();
             return 0;
         }
-        return 0;
     }
 
     /* ================================== */

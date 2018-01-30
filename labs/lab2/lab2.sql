@@ -36,7 +36,7 @@ CREATE TABLE shows (
 );
 
 CREATE TABLE reservations (
-  res_nbr INTEGER PRIMARY KEY,
+  res_nbr INTEGER PRIMARY KEY AUTOINCREMENT,
   username TEXT,
   movie_name TEXT,
   theater_name TEXT,
