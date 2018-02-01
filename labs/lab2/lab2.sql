@@ -18,12 +18,12 @@ CREATE TABLE users (
 );
 
 CREATE TABLE theaters (
-  name TEXT PRIMARY KEY,
+  theater_name TEXT PRIMARY KEY,
   seats INT
 );
 
 CREATE TABLE movies (
-  name TEXT PRIMARY KEY
+  movie_name TEXT PRIMARY KEY
 );
 
 CREATE TABLE shows (
@@ -31,8 +31,8 @@ CREATE TABLE shows (
   theater_name TEXT,
   show_date DATE,
   PRIMARY KEY(movie_name, show_date),
-  FOREIGN KEY(movie_name) REFERENCES movies(name),
-  FOREIGN KEY(theater_name) REFERENCES theaters(name)
+  FOREIGN KEY(movie_name) REFERENCES movies(movie_name),
+  FOREIGN KEY(theater_name) REFERENCES theaters(theater_name)
 );
 
 CREATE TABLE reservations (
@@ -43,8 +43,8 @@ CREATE TABLE reservations (
   show_date DATE,
   FOREIGN KEY(username) REFERENCES users(username),
   FOREIGN KEY(movie_name, show_date) REFERENCES shows(movie_name, show_date)
-  FOREIGN KEY(movie_name) REFERENCES movies(name),
-  FOREIGN KEY(theater_name) REFERENCES theaters(name)
+  FOREIGN KEY(movie_name) REFERENCES movies(movie_name),
+  FOREIGN KEY(theater_name) REFERENCES theaters(theater_name)
 );
 
 
@@ -58,13 +58,13 @@ VALUES  ("Emma", "Emma EMma", "Malmö", "0202194213" ),
 
 
 INSERT
-INTO    movies (name)
+INTO    movies (movie_name)
 VALUES  ("Dokumentär om Borrby"), ("Rädda valarna"), ("Vi räddade valarna"),
         ("Valarna har nu tagit över"),  ("Hoppla pålle"),
         ("HOPPLA SNABBARE HÄSTJÄVEL"), ("Folk spenderar för mycket tid på youtube");
 
 INSERT
-INTO    theaters (name, seats)
+INTO    theaters (theater_name, seats)
 VALUES  ("BorrbyBion", 5), ("Royal Malmö", 7), ("IMAX Ystad", 3),
         ("HemmaBio StureP", 2);
 
@@ -99,4 +99,7 @@ VALUES  ("Rädda valarna", "BorrbyBion", "2017-01-28"),
 INSERT
 INTO    reservations (username, theater_name, movie_name, show_date)
 VALUES  ("Emma", "HemmaBio StureP", "Rädda valarna", "2017-01-26"),
+        ("An2n", "Royal Malmö", "Dokumentär om Borrby", "2017-01-26"),
+        ("An2n", "Royal Malmö", "Dokumentär om Borrby", "2017-01-26"),
+        ("An2n", "Royal Malmö", "Dokumentär om Borrby", "2017-01-26"),
         ("An2n", "Royal Malmö", "Dokumentär om Borrby", "2017-01-26");

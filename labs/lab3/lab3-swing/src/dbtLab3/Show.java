@@ -4,29 +4,14 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class Show {
-    private String theaterName;
-    private String movie_name;
-    private String date;
+    public final String theaterName;
+    public final String movie_name;
+    public final String date;
 
-    public Show(ResultSet rs) {
-        try {
-            theaterName = rs.getString("theater_name");
-            movie_name = rs.getString("movie_name");
-            date = rs.getString("show_date");
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+    public Show(ResultSet rs) throws SQLException {
+        this.theaterName = rs.getString("theater_name");
+        this.movie_name = rs.getString("movie_name");
+        this.date = rs.getString("show_date");
     }
 
-    public String getTheaterName() {
-        return theaterName;
-    }
-
-    public String getMovieName() {
-        return movie_name;
-    }
-
-    public String getShowdate() {
-        return date;
-    }
 }

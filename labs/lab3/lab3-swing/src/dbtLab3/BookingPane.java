@@ -236,10 +236,10 @@ public class BookingPane extends BasicPane {
             String movieName = nameList.getSelectedValue();
             String date = dateList.getSelectedValue();
             Show show = db.getPerformance(movieName, date).get(0);
-            fields[MOVIE_NAME].setText(show.getMovieName());
-            fields[THEATER_NAME].setText(show.getTheaterName());
-            fields[PERF_DATE].setText(show.getShowdate());
-            fields[FREE_SEATS].setText(Integer.toString(db.getFreeSeats(show.getTheaterName(), show.getShowdate())));
+            fields[MOVIE_NAME].setText(show.movie_name);
+            fields[THEATER_NAME].setText(show.theaterName);
+            fields[PERF_DATE].setText(show.date);
+            fields[FREE_SEATS].setText(Integer.toString(db.getFreeSeats(show.movie_name, show.date)));
         }
     }
 
@@ -258,20 +258,20 @@ public class BookingPane extends BasicPane {
             if (nameList.isSelectionEmpty() || dateList.isSelectionEmpty()) {
                 return;
             }
-            if (!CurrentUser.instance().isLoggedIn()) {
+            CurrentUser c = CurrentUser.instance();
+            String t_name = fields[THEATER_NAME].getText();
+            if (!c.isLoggedIn()) {
                 displayMessage("Must login first");
                 return;
             }
             String movieName = nameList.getSelectedValue();
             String date = dateList.getSelectedValue();
-            if (db.getFreeSeats(fields[THEATER_NAME].getText(), fields[PERF_DATE].getText()) > 0) {
-
-                displayMessage("Reservation made! Your numbers is " +
-                db.makeReservation(currentUserNameLabel.getText(), fields[THEATER_NAME].getText(), movieName, date));;
-                fields[FREE_SEATS].setText(Integer.toString(db.getFreeSeats(fields[THEATER_NAME].getText(), date)));
-
+            if (db.getFreeSeats(movieName, fields[PERF_DATE].getText()) > 0) {
+                displayMessage("Reservation made! Your number is " +
+                db.makeReservation(c.getCurrentUserId(), t_name, movieName, date));
+                fields[FREE_SEATS].setText(Integer.toString(db.getFreeSeats(movieName, date)));
             } else
-                displayMessage("This show is fully boooked");
+                displayMessage("This show is fully booked");
         }
     }
 }
