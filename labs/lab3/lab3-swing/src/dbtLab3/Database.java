@@ -134,7 +134,7 @@ public class Database {
 
     public int getFreeSeats(String movieName, String date) {
         String query =
-            "SELECT   *, seats, seats - COUNT() free_seats\n" +
+            "SELECT   *, seats, seats - COUNT(res_nbr) free_seats\n" +
             "FROM SHOWS \n" +
             "LEFT JOIN reservations \n" +
             "USING (movie_name, show_date) \n" +
@@ -146,8 +146,6 @@ public class Database {
             ps.setString(2, date);
             ResultSet rs = ps.executeQuery();
             if(rs.next()) {
-                if(rs.getInt("res_nbr") == 0)
-                    return rs.getInt("seats");
                 return rs.getInt("free_seats");
             }
         } catch (SQLException e) {
