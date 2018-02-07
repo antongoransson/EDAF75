@@ -193,7 +193,6 @@ public class BookingPane extends BasicPane {
      * Clear all text fields.
      */
     private void clearFields() {
-        dateListModel.removeAllElements();
         for (int i = 0; i < fields.length; i++) {
             fields[i].setText("");
         }
@@ -231,6 +230,7 @@ public class BookingPane extends BasicPane {
          */
         public void valueChanged(ListSelectionEvent e) {
             if (nameList.isSelectionEmpty() || dateList.isSelectionEmpty()) {
+                clearFields();
                 return;
             }
             String movieName = nameList.getSelectedValue();

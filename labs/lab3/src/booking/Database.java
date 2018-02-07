@@ -156,7 +156,7 @@ public class Database {
     }
 
 
-    public int makeReservation(String username, String movieName, String theaterName, String date) {
+    public int makeReservation(String username, String theaterName, String movieName, String date) {
         String query =
             "INSERT \n" +
             "INTO reservations(username, theater_name, movie_name, show_date) \n" +
@@ -164,8 +164,8 @@ public class Database {
         int res_id = -1;
         try (PreparedStatement ps = conn.prepareStatement(query)) {
             ps.setString(1, username);
-            ps.setString(2, movieName);
-            ps.setString(3, theaterName);
+            ps.setString(2, theaterName);
+            ps.setString(3, movieName);
             ps.setString(4, date);
             ps.executeUpdate();
             ResultSet rs = ps.getGeneratedKeys();
