@@ -1,4 +1,4 @@
-package dbtLab3;
+package booking;
 
 import java.sql.*;
 import java.util.ArrayList;

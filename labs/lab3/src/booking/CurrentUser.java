@@ -1,4 +1,4 @@
-package dbtLab3;
+package booking;
 
 /**
  * CurrentUser represents the current user that has logged on to

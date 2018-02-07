@@ -1,4 +1,4 @@
-package dbtLab3;
+package booking;
 
 import javax.swing.*;
 import javax.swing.border.*;
