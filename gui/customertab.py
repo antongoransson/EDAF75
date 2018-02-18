@@ -131,6 +131,7 @@ class CustomerTab(QWidget):
 
     def createCustomerModel(self, parent):
         model = QStandardItemModel(0, 2, parent)
+        self.dataView.setStyleSheet("font: 20pt")
         model.setHeaderData(self.CUSTOMER, Qt.Horizontal, "Customer")
         model.setHeaderData(self.ADDRESS, Qt.Horizontal, "Address")
         return model

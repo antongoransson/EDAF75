@@ -8,7 +8,7 @@ class Dialog(QDialog):
         super(Dialog, self).__init__(parent)
 
         layout = QVBoxLayout(self)
-
+        self.setWindowTitle("Add customer")
         self.textbox = QLineEdit(self)
         self.textbox1 = QLineEdit(self)
 
@@ -44,4 +44,4 @@ class Dialog(QDialog):
     def getInfo(parent = None):
         dialog = Dialog(parent)
         result = dialog.exec_()
-        return dialog.textbox.text(), dialog.textbox1.text(), result == QDialog.Accepted 
+        return dialog.textbox.text(), dialog.textbox1.text(), result == QDialog.Accepted
