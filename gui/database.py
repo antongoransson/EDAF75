@@ -1,20 +1,21 @@
 import sqlite3
+import os.path
+import sys
 from data_classes import Customer
-# conn = sqlite3.connect('movies.db')
-# c = conn.cursor()
-# c.execute('SELECT * FROM movies')
-# print (c.fetchone()[0])
-# for row in c.execute('SELECT * FROM shows'):
-#         print(row)
-class Database():
-    def __init__(self):
-        self.conn, self.c = None, None
-        self.conn, self.c = self.connect()
 
-    def connect(self):
+class Database():
+    def __init__(self, db_file):
+        self.conn, self.c = None, None
+        if(os.path.exists(db_file)):
+            self.conn, self.c = self.connect(db_file)
+        else:
+            print('Database file does not exist')
+            sys.exit(1)
+
+    def connect(self, db_file):
         """ Make connection to an SQLite database file """
         if self.conn is None:
-            conn = sqlite3.connect('db.db')
+            conn = sqlite3.connect(db_file)
             c = conn.cursor()
             return conn, c
         else:
@@ -25,24 +26,21 @@ class Database():
         # conn.commit()
         conn.close()
 
-    def get_movies(self):
-        return [row[0] for row in self.c.execute('SELECT * FROM movies')]
-
-    def get_movie(self, movie):
-        query = 'SELECT * FROM movies WHERE movie_name =:name'
-        return [row[0] for row in self.c.execute(query, {"name": movie})]
-
-    def get_customers(self):
+    def get_all_customers(self):
         return [Customer(c, a) for c, a in self.c.execute('SELECT * FROM customers')]
 
-    def get_customer(self, customer):
-        query = 'SELECT * FROM customers WHERE name =:name'
-        return [Customer(c, a) for c,a in self.c.execute(query, {"name": customer})]
+    def get_customers(self, customer, column):
+        query = '''SELECT * FROM customers
+                    WHERE {column} like :value'''.format(column=column)
+        return [Customer(c, a) for c,a in self.c.execute(query, {'value': customer + "%"})]
 
     def insert_customer(self, customer, name):
         query = 'INSERT INTO customers VALUES(?, ?)'
         self.c.execute(query, (customer, name))
         self.conn.commit()
 
-    # get_movies()
-    # print(get_movie('Dokumentär om Borrby'))
+    def delete_customer(self, customer):
+        query = '''DELETE FROM customers
+                   WHERE name=:name'''
+        self.c.execute(query, {"name": customer})
+        self.conn.commit()
