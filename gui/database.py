@@ -1,12 +1,12 @@
 import sqlite3
 import os.path
 import sys
-from data_classes import Customer
+from data_classes import Customer, RawMaterial
 
 class Database():
     def __init__(self, db_file):
         self.conn, self.c = None, None
-        if(os.path.exists(db_file)):
+        if(os.path.isfile(db_file)):
             self.conn, self.c = self.connect(db_file)
         else:
             print('Database file does not exist')
@@ -32,10 +32,12 @@ class Database():
     def get_customers(self, customer, column):
         query = '''SELECT * FROM customers
                     WHERE {column} like :value'''.format(column=column)
-        return [Customer(c, a) for c,a in self.c.execute(query, {'value': customer + "%"})]
+        return [Customer(c, a) for c,a in self.c.execute(query, {'value': "%" + customer + "%"})]
 
     def insert_customer(self, customer, name):
-        query = 'INSERT INTO customers VALUES(?, ?)'
+        query = '''INSERT
+                   INTO customers
+                   VALUES(?, ?)'''
         self.c.execute(query, (customer, name))
         self.conn.commit()
 
@@ -44,3 +46,16 @@ class Database():
                    WHERE name=:name'''
         self.c.execute(query, {"name": customer})
         self.conn.commit()
+
+    def get_all_recipes(self):
+        return [recipe[0] for recipe in self.c.execute('SELECT * FROM recipes')]
+
+    def get_recipe_items(self, recipe):
+        query = '''SELECT raw_material, ri.amount, rm.amount amount_left
+                   FROM recipes
+                   LEFT JOIN recipe_items AS ri
+                   ON (recipes.name = ri.recipe)
+                   LEFT JOIN raw_materials as rm
+                   USING (raw_material)
+                   WHERE name = :name'''
+        return [RawMaterial(rm, amount, amount_left) for rm, amount, amount_left in self.c.execute(query, {'name': recipe})]

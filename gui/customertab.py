@@ -13,7 +13,7 @@ class CustomerTab(QWidget):
 
         self.h_layout = QHBoxLayout()
         self.horizontalGroupBox = QGroupBox("Select column to filter on")
-        self.h__search_layout = QHBoxLayout()
+        self.h_search_layout = QHBoxLayout()
         self.horizontal_searchGroupBox = QGroupBox("Search")
         self.h__op_layout = QHBoxLayout()
         self.horizontal_opGroupBox = QGroupBox("Handle Customers")
@@ -21,15 +21,15 @@ class CustomerTab(QWidget):
         self.search_box = QLineEdit(self)
         self.search_box.resize(280, 40)
         self.search_button = QPushButton('Search', self)
-        self.search_button.clicked.connect(self.search_movie)
+        self.search_button.clicked.connect(self.search_customer)
         self.reset_button = QPushButton('Reset', self)
         self.reset_button.clicked.connect(self.reset_search)
         self.search_box.returnPressed.connect(self.search_button.click)
 
-        self.h__search_layout.addWidget(self.search_box)
-        self.h__search_layout.addWidget(self.search_button)
-        self.h__search_layout.addWidget(self.reset_button)
-        self.horizontal_searchGroupBox.setLayout(self.h__search_layout)
+        self.h_search_layout.addWidget(self.search_box)
+        self.h_search_layout.addWidget(self.search_button)
+        self.h_search_layout.addWidget(self.reset_button)
+        self.horizontal_searchGroupBox.setLayout(self.h_search_layout)
 
         self.modal_button = QPushButton('Add', self)
         self.modal_button.clicked.connect(self.modal_onclick)
@@ -47,10 +47,11 @@ class CustomerTab(QWidget):
         self.h_layout.addWidget(self.cb)
         self.horizontalGroupBox.setLayout(self.h_layout)
 
-        self.dataGroupBox = QGroupBox("Customers")
+        self.dataGroupBox = QGroupBox()
         self.dataView = QTreeView()
         self.dataView.setRootIsDecorated(False)
         self.dataView.setAlternatingRowColors(True)
+        self.dataView.setSortingEnabled(True)
         dataLayout = QHBoxLayout()
         dataLayout.addWidget(self.dataView)
         self.dataGroupBox.setLayout(dataLayout)
@@ -113,7 +114,7 @@ class CustomerTab(QWidget):
         self.textbox.setText("")
 
     @pyqtSlot()
-    def search_movie(self):
+    def search_customer(self):
         customers = self.db.get_customers(self.search_box.text(),self.cb.currentText().lower())
         self.model.setRowCount(0)
         if (len(customers) > 0):
@@ -131,7 +132,7 @@ class CustomerTab(QWidget):
 
     def createCustomerModel(self, parent):
         model = QStandardItemModel(0, 2, parent)
-        self.dataView.setStyleSheet("font: 20pt")
+        # self.dataView.setStyleSheet("font: 20pt")
         model.setHeaderData(self.CUSTOMER, Qt.Horizontal, "Customer")
         model.setHeaderData(self.ADDRESS, Qt.Horizontal, "Address")
         return model

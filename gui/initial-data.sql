@@ -39,7 +39,7 @@ VALUES  ("Flour", 5000),
         ("Sodium bicarbonate", 2500),
         ("Vanilla", 4000),
         ("Chopped almonds", 2500),
-        ("Cinnamon", "Malmö"),
+        ("Cinnamon", 6000),
         ("Vanilla sugar", 2500);
 
 INSERT
@@ -73,5 +73,5 @@ VALUES  ("Nut ring", "Flour", 450),
         ("Berliner", "Butter", 250),
         ("Berliner", "Icing sugar", 100),
         ("Berliner", "Eggs", 50),
-        ("Berliner", "Vanlla sugar", 5),
+        ("Berliner", "Vanilla sugar", 5),
         ("Berliner", "Chocolate", 50);
