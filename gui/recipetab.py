@@ -86,6 +86,8 @@ class RecipeTab(QWidget):
         for rm in raw_materials:
             self.addRawMaterial(self.rm_model, rm.raw_material, rm.amount, rm.amount_left)
         self.rm_dataView.resizeColumnToContents(0)
+        self.rm_dataView.header().setSectionResizeMode(1, QHeaderView.Stretch);
+        self.rm_dataView.header().setSectionResizeMode(2, QHeaderView.Stretch);
 
     def createRecipeModel(self, parent):
         model = QStandardItemModel(0, 1, parent)

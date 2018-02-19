@@ -99,7 +99,10 @@ class CustomerTab(QWidget):
         customers.sort(key=lambda tup: tup.name, reverse= True)
         for customer in customers:
             self.addCustomer(self.model, customer.name, customer.address)
-        self.dataView.resizeColumnToContents(0)
+        # self.dataView.resizeColumnToContents(0)
+        self.dataView.header().setSectionResizeMode(0, QHeaderView.Stretch);
+        self.dataView.header().setSectionResizeMode(1, QHeaderView.Stretch);
+        # self.rm_dataView.header().setSectionResizeMode(2, QHeaderView.Stretch);
 
     @pyqtSlot()
     def search(self):
