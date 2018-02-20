@@ -4,29 +4,26 @@ from PyQt5.QtCore import *
 
 
 class Dialog(QDialog):
-    def __init__(self, parent = None):
+    def __init__(self, fields, default_vals, title, parent):
         super(Dialog, self).__init__(parent)
 
+        if default_vals is None:
+            default_vals = ['' for field in fields]
         layout = QVBoxLayout(self)
-        self.setWindowTitle("Add customer")
-        self.textbox = QLineEdit(self)
-        self.textbox1 = QLineEdit(self)
+        self.fields = fields
+        self.setWindowTitle(title)
+        self.resize(600, 600)
 
-        self.h_layout1 = QHBoxLayout()
-        self.horizontalGroupBox1 = QGroupBox("Customer name")
+        self.layouts = [QHBoxLayout() for field in fields]
+        self.group_boxes = [QGroupBox(field) for field in fields]
+        self.textboxes = [QLineEdit(self) for x in range(len(fields))]
+        for i in range(len(fields)):
+            self.textboxes[i].setText(default_vals[i])
+            self.layouts[i].addWidget(self.textboxes[i])
+            self.group_boxes[i].setLayout(self.layouts[i])
 
-        self.h_layout1.addWidget(self.textbox)
-        self.horizontalGroupBox1.setLayout(self.h_layout1)
-
-        self.h_layout2 = QHBoxLayout()
-        self.horizontalGroupBox2 = QGroupBox("Address name")
-
-        self.h_layout2.addWidget(self.textbox1)
-        self.horizontalGroupBox2.setLayout(self.h_layout2)
-
-
-        layout.addWidget(self.horizontalGroupBox1)
-        layout.addWidget(self.horizontalGroupBox2)
+        for gb in self.group_boxes:
+            layout.addWidget(gb)
 
         buttons = QDialogButtonBox(
             QDialogButtonBox.Ok | QDialogButtonBox.Cancel,
@@ -35,13 +32,12 @@ class Dialog(QDialog):
         buttons.rejected.connect(self.reject)
         layout.addWidget(buttons)
 
-    # get current date and time from the dialog
-    def dateTime(self):
-        return self.datetime.dateTime()
-
     # static method to create the dialog and return (date, time, accepted)
     @staticmethod
-    def getInfo(parent = None):
-        dialog = Dialog(parent)
+    def getInfo(fields, default_vals = None, title = 'Dialog', parent = None):
+        dialog = Dialog(fields, default_vals, title, parent)
         result = dialog.exec_()
-        return dialog.textbox.text(), dialog.textbox1.text(), result == QDialog.Accepted
+        return_val = [textbox.text() for textbox in dialog.textboxes]
+        return_val.append(result == QDialog.Accepted)
+        return return_val
+        # return dialog.textbox.text(), dialog.textbox1.text(), result == QDialog.Accepted

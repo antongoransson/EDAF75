@@ -74,7 +74,7 @@ class CustomerTab(QWidget):
 
     @pyqtSlot()
     def modal_onclick(self):
-        name, address, ok = Dialog.getInfo()
+        name, address, ok = Dialog.getInfo(['Customer name', 'Address'], 'Add Customer')
         if (ok):
             self.db.insert_customer(name, address)
             self.update_view()
@@ -102,7 +102,6 @@ class CustomerTab(QWidget):
         # self.dataView.resizeColumnToContents(0)
         self.dataView.header().setSectionResizeMode(0, QHeaderView.Stretch);
         self.dataView.header().setSectionResizeMode(1, QHeaderView.Stretch);
-        # self.rm_dataView.header().setSectionResizeMode(2, QHeaderView.Stretch);
 
     @pyqtSlot()
     def search(self):
@@ -127,11 +126,11 @@ class CustomerTab(QWidget):
             self.search_box.setText("")
             self.addCustomer(self.model, "No results found", "")
         self.dataView.resizeColumnToContents(0)
-        # QMessageBox.question(self, 'Message - pythonspot.com', "You typed: " + textboxValue, QMessageBox.Ok, QMessageBox.Ok)
 
     @pyqtSlot()
     def selectionchange(self):
         text = self.cb.currentText()
+        self.search_box.setFocus()
 
     def createCustomerModel(self, parent):
         model = QStandardItemModel(0, 2, parent)
