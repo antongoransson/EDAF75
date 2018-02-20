@@ -14,10 +14,10 @@ class App(QMainWindow):
     def __init__(self , db):
         super().__init__()
         self.title = 'Krusty Cookies'
-        self.left = 50
-        self.top = 50
-        self.width = 1800
-        self.height = 1000
+        self.left = 500
+        self.top = 200
+        self.width = 900
+        self.height = 600
         self.db = db
         self.initUI()
 

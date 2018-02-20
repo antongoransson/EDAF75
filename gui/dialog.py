@@ -10,19 +10,18 @@ class Dialog(QDialog):
         if default_vals is None:
             default_vals = ['' for field in fields]
         layout = QVBoxLayout(self)
-        self.fields = fields
         self.setWindowTitle(title)
-        self.resize(600, 600)
+        # self.resize(600, 600)
 
-        self.layouts = [QHBoxLayout() for field in fields]
-        self.group_boxes = [QGroupBox(field) for field in fields]
+        layouts = [QHBoxLayout() for field in fields]
+        group_boxes = [QGroupBox(field) for field in fields]
         self.textboxes = [QLineEdit(self) for x in range(len(fields))]
         for i in range(len(fields)):
             self.textboxes[i].setText(default_vals[i])
-            self.layouts[i].addWidget(self.textboxes[i])
-            self.group_boxes[i].setLayout(self.layouts[i])
+            layouts[i].addWidget(self.textboxes[i])
+            group_boxes[i].setLayout(layouts[i])
 
-        for gb in self.group_boxes:
+        for gb in group_boxes:
             layout.addWidget(gb)
 
         buttons = QDialogButtonBox(
@@ -34,10 +33,9 @@ class Dialog(QDialog):
 
     # static method to create the dialog and return (date, time, accepted)
     @staticmethod
-    def getInfo(fields, default_vals = None, title = 'Dialog', parent = None):
+    def getInfo(fields, title = 'Dialog', default_vals = None, parent = None):
         dialog = Dialog(fields, default_vals, title, parent)
         result = dialog.exec_()
         return_val = [textbox.text() for textbox in dialog.textboxes]
         return_val.append(result == QDialog.Accepted)
         return return_val
-        # return dialog.textbox.text(), dialog.textbox1.text(), result == QDialog.Accepted

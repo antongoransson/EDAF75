@@ -11,78 +11,62 @@ class RecipeTab(QWidget):
         super(RecipeTab, self).__init__(parent)
         self.layout = QVBoxLayout()
         self.db = db
-        self.h_layout = QHBoxLayout()
-        self.h__op_layout = QHBoxLayout()
-        self.horizontal_opGroupBox = QGroupBox("Handle Recipes")
 
-        self.modal_button = QPushButton('Add', self)
-        # self.modal_button.clicked.connect(self.modal_onclick)
-        self.remove_button = QPushButton('Remove', self)
-        self.remove_button.clicked.connect(self.remove_recipe)
+        dataGroupBox = QGroupBox()
+        self.recipe_data_view = QTreeView()
+        self.recipe_data_view.setRootIsDecorated(False)
+        self.recipe_data_view.setAlternatingRowColors(True)
+        self.recipe_data_view.setSortingEnabled(True)
+        self.recipe_data_view.clicked.connect(self.recipe_view_onclick)
 
-        self.h__op_layout.addWidget(self.modal_button)
-        self.h__op_layout.addWidget(self.remove_button)
-        self.horizontal_opGroupBox.setLayout(self.h__op_layout)
+        self.raw_mat_data_view = QTreeView()
+        self.raw_mat_data_view.setRootIsDecorated(False)
+        self.raw_mat_data_view.setAlternatingRowColors(True)
+        self.raw_mat_data_view.setSortingEnabled(True)
+        self.raw_mat_data_view.clicked.connect(self.raw_mat_view_onclick)
 
-        self.dataGroupBox = QGroupBox()
-        self.dataView = QTreeView()
-        self.dataView.setRootIsDecorated(False)
-        self.dataView.setAlternatingRowColors(True)
-        self.dataView.setSortingEnabled(True)
-        self.dataView.clicked.connect(self.view_onclick)
-
-        self.rm_dataView = QTreeView()
-        self.rm_dataView.setRootIsDecorated(False)
-        self.rm_dataView.setAlternatingRowColors(True)
-        self.rm_dataView.setSortingEnabled(True)
-        self.rm_dataView.clicked.connect(self.rmview_onclick)
-        # self.rm_dataView.selectionChanged.connect(self.test)
-
-        self.rm_button_labels=['Add', 'Update', 'Remove']
-        self.rm_buttons_onclick = [self.add_onclick, self.update_onclick, self.remove_onclick]
-        self.rm_buttons = [0] * 3
+        rm_button_labels=['Add', 'Update', 'Remove']
+        rm_buttons_onclick = [self.add_onclick, self.update_onclick, self.remove_onclick]
+        self.rm_buttons = [i for i in range(len(rm_button_labels))]
         hbox = QHBoxLayout()
         for i in range(len(self.rm_buttons)):
-            self.rm_buttons[i] = QPushButton(self.rm_button_labels[i], self)
-            self.rm_buttons[i].clicked.connect(self.rm_buttons_onclick[i])
-            self.rm_buttons[i].setEnabled(i == 0)
+            self.rm_buttons[i] = QPushButton(rm_button_labels[i], self)
+            self.rm_buttons[i].clicked.connect(rm_buttons_onclick[i])
+            self.rm_buttons[i].setEnabled(rm_button_labels[i] == 'Add')
             hbox.addWidget(self.rm_buttons[i])
 
         self.search_box = QLineEdit(self)
         self.search_box.resize(280, 40)
-        self.search_button = QPushButton('Search', self)
-        self.search_button.clicked.connect(self.search_raw_m)
-        self.search_box.returnPressed.connect(self.search_button.click)
-        self.reset_button = QPushButton('Reset', self)
-        self.reset_button.clicked.connect(self.reset_search)
+        search_button = QPushButton('Search', self)
+        search_button.clicked.connect(self.search_raw_mat)
+        self.search_box.returnPressed.connect(search_button.click)
+        reset_button = QPushButton('Reset', self)
+        reset_button.clicked.connect(self.reset_search)
         dataLayout = QHBoxLayout()
 
-        vbox = QVBoxLayout()
+        v_raw_mat_box = QVBoxLayout()
 
         h_searchbox = QHBoxLayout()
-        vbox.addWidget(self.rm_dataView)
+        v_raw_mat_box.addWidget(self.raw_mat_data_view)
 
         h_searchbox.addWidget(self.search_box)
-        h_searchbox.addWidget(self.search_button)
-        h_searchbox.addWidget(self.reset_button)
-        vbox.addLayout(hbox)
-        vbox.addLayout(h_searchbox)
-        dataLayout.addWidget(self.dataView)
-        dataLayout.addLayout(vbox)
-        # dataLayout.addWidget(self.rm_dataView)
-        self.dataGroupBox.setLayout(dataLayout)
+        h_searchbox.addWidget(search_button)
+        h_searchbox.addWidget(reset_button)
+        v_raw_mat_box.addLayout(hbox)
+        v_raw_mat_box.addLayout(h_searchbox)
+        dataLayout.addWidget(self.recipe_data_view)
+        dataLayout.addLayout(v_raw_mat_box)
+        dataGroupBox.setLayout(dataLayout)
 
         self.recipe_model = self.createRecipeModel(self)
+        self.raw_mat_model = self.createRawMaterialModel(self)
 
-        self.rm_model = self.createRawMaterialModel(self)
-        self.dataView.setModel(self.recipe_model)
-
-        self.rm_dataView.setModel(self.rm_model)
+        self.recipe_data_view.setModel(self.recipe_model)
+        self.raw_mat_data_view.setModel(self.raw_mat_model)
         self.update_recipe_view()
-        self.update_raw_material_view()
+        self.update_raw_mat_view()
 
-        self.layout.addWidget(self.dataGroupBox)
-        # self.layout.addWidget(self.horizontal_opGroupBox)
+        self.layout.addWidget(dataGroupBox)
 
 
     @pyqtSlot()
@@ -90,65 +74,57 @@ class RecipeTab(QWidget):
         raw_material, amount, ok = Dialog.getInfo(['Raw material', 'Amount'], 'Add')
         if (ok):
             self.db.insert_raw_material(raw_material, amount)
-            self.update_raw_material_view()
+            self.update_raw_mat_view()
 
     @pyqtSlot()
     def remove_onclick(self):
-        index = self.rm_dataView.selectedIndexes()[0]
+        index = self.raw_mat_data_view.selectedIndexes()[0]
         item = index.model().itemFromIndex(index)
         self.db.delete_raw_material(item.text())
-        self.update_raw_material_view()
+        self.update_raw_mat_view()
 
     @pyqtSlot()
     def update_onclick(self):
-        rm_index, _, amount_index = self.rm_dataView.selectedIndexes()
+        rm_index, _, amount_index = self.raw_mat_data_view.selectedIndexes()
         raw_m = rm_index.model().itemFromIndex(rm_index)
         amount = amount_index.model().itemFromIndex(amount_index)
-        amount, ok = Dialog.getInfo(['Amount'], [amount.text()], 'Update')
+        amount, ok = Dialog.getInfo(['Amount'], 'Update', [amount.text()])
         if (ok):
             item = rm_index.model().itemFromIndex(rm_index)
             self.db.update_raw_material(item.text(), amount)
-            self.update_raw_material_view()
+            self.update_raw_mat_view()
 
     @pyqtSlot()
-    def view_onclick(self):
-        index = self.dataView.selectedIndexes()[0]
+    def recipe_view_onclick(self):
+        index = self.recipe_data_view.selectedIndexes()[0]
         recipe = index.model().itemFromIndex(index).text()
-        self.update_raw_material_view(recipe)
+        self.update_raw_mat_view(recipe)
         self.search_box.setText("")
 
     @pyqtSlot()
-    def rmview_onclick(self):
+    def raw_mat_view_onclick(self):
         for b in self.rm_buttons:
             b.setEnabled(True)
 
     @pyqtSlot()
-    def remove_recipe(self):
-        index = self.dataView.selectedIndexes()[0]
-        item = index.model().itemFromIndex(index)
-        self.db.delete_customer(item.text())
-        self.update_recipe_view()
-
-
-    @pyqtSlot()
-    def search_raw_m(self):
-        self.dataView.clearSelection()
+    def search_raw_mat(self):
+        self.recipe_data_view.clearSelection()
         self.disable_buttons()
-        raw_m = self.db.get_raw_materials(self.search_box.text())
-        self.rm_model.setRowCount(0)
-        if (len(raw_m) > 0):
-            for r in raw_m:
-                self.addRawMaterial(self.rm_model, r.raw_material, '-', r.amount)
+        raw_mats = self.db.get_raw_materials(self.search_box.text())
+        self.raw_mat_model.setRowCount(0)
+        if (len(raw_mats) > 0):
+            for r in raw_mats:
+                self.addRawMaterial(self.raw_mat_model, r.raw_material, '-', r.amount)
         else:
             self.search_box.setText("")
-            self.addRawMaterial(self.rm_model, 'No results found', '', '')
-        self.rm_dataView.resizeColumnToContents(0)
+            self.addRawMaterial(self.raw_mat_model, 'No results found', '', '')
+        self.raw_mat_data_view.resizeColumnToContents(0)
 
     @pyqtSlot()
     def reset_search(self):
-        self.rm_dataView.clearSelection()
-        self.dataView.clearSelection()
-        self.update_raw_material_view()
+        self.raw_mat_data_view.clearSelection()
+        self.recipe_data_view.clearSelection()
+        self.update_raw_mat_view()
         self.search_box.setText("")
         self.search_box.setFocus()
 
@@ -158,7 +134,7 @@ class RecipeTab(QWidget):
 
     @pyqtSlot()
     def test(self):
-        index = self.dataView.selectedIndexes()
+        index = self.recipe_data_view.selectedIndexes()
         print(index)
 
     def update_recipe_view(self):
@@ -167,21 +143,21 @@ class RecipeTab(QWidget):
         recipes.sort(reverse = True)
         for recipe in recipes:
             self.addRecipe(self.recipe_model, recipe)
-        self.dataView.resizeColumnToContents(0)
+        self.recipe_data_view.resizeColumnToContents(0)
 
-    def update_raw_material_view(self, recipe = None):
-        self.rm_model.setRowCount(0)
+    def update_raw_mat_view(self, recipe = None):
+        self.raw_mat_model.setRowCount(0)
         self.disable_buttons()
         if recipe is None:
             raw_materials =  self.db.get_all_raw_materials()
         else:
             raw_materials = self.db.get_recipe_items(recipe)
-        raw_materials.sort(key=lambda tup: tup.raw_material, reverse= True)
+        raw_materials.sort(key = lambda raw_mat: raw_mat.raw_material, reverse = True)
         for rm in raw_materials:
-            self.addRawMaterial(self.rm_model, rm.raw_material, rm.amount, rm.amount_left)
-        self.rm_dataView.resizeColumnToContents(0)
+            self.addRawMaterial(self.raw_mat_model, rm.raw_material, rm.amount, rm.amount_left)
+        self.raw_mat_data_view.resizeColumnToContents(0)
         for i in [1, 2]:
-            self.rm_dataView.header().setSectionResizeMode(i, QHeaderView.Stretch);
+            self.raw_mat_data_view.header().setSectionResizeMode(i, QHeaderView.Stretch);
 
     def createRecipeModel(self, parent):
         model = QStandardItemModel(0, 1, parent)

@@ -11,66 +11,65 @@ class CustomerTab(QWidget):
         self.layout = QVBoxLayout()
         self.db = db
 
-        self.h_layout = QHBoxLayout()
-        self.horizontalGroupBox = QGroupBox("Select column to filter on")
-        self.h_search_layout = QHBoxLayout()
-        self.horizontal_searchGroupBox = QGroupBox("Search")
-        self.h__op_layout = QHBoxLayout()
-        self.horizontal_opGroupBox = QGroupBox("Handle Customers")
+        h_layout = QHBoxLayout()
+        horizontalGroupBox = QGroupBox("Select column to filter on")
+        h_searchlayout = QHBoxLayout()
+        horizontal_searchGroupBox = QGroupBox("Search")
+        h_button_layout = QHBoxLayout()
+        horizontal_handle_customers_GroupBox = QGroupBox("Handle Customers")
 
         self.search_box = QLineEdit(self)
         self.search_box.resize(280, 40)
-        self.search_button = QPushButton('Search', self)
-        self.search_button.clicked.connect(self.search_customer)
-        self.reset_button = QPushButton('Reset', self)
-        self.reset_button.clicked.connect(self.reset_search)
-        self.search_box.returnPressed.connect(self.search_button.click)
+        search_button = QPushButton('Search', self)
+        search_button.clicked.connect(self.search_customer)
+        reset_button = QPushButton('Reset', self)
+        reset_button.clicked.connect(self.reset_search)
+        self.search_box.returnPressed.connect(search_button.click)
 
-        self.h_search_layout.addWidget(self.search_box)
-        self.h_search_layout.addWidget(self.search_button)
-        self.h_search_layout.addWidget(self.reset_button)
-        self.horizontal_searchGroupBox.setLayout(self.h_search_layout)
+        h_searchlayout.addWidget(self.search_box)
+        h_searchlayout.addWidget(search_button)
+        h_searchlayout.addWidget(reset_button)
+        horizontal_searchGroupBox.setLayout(h_searchlayout)
 
-        self.modal_button = QPushButton('Add', self)
-        self.modal_button.clicked.connect(self.modal_onclick)
-        self.remove_button = QPushButton('Remove', self)
-        self.remove_button.clicked.connect(self.remove_customer)
+        modal_button = QPushButton('Add', self)
+        modal_button.clicked.connect(self.modal_onclick)
+        remove_button = QPushButton('Remove', self)
+        remove_button.clicked.connect(self.remove_customer)
 
-        self.h__op_layout.addWidget(self.modal_button)
-        self.h__op_layout.addWidget(self.remove_button)
-        self.horizontal_opGroupBox.setLayout(self.h__op_layout)
+        h_button_layout.addWidget(modal_button)
+        h_button_layout.addWidget(remove_button)
+        horizontal_handle_customers_GroupBox.setLayout(h_button_layout)
 
         self.cb = QComboBox()
         self.cb.addItems(['Name', 'Address'])
         self.cb.currentIndexChanged.connect(self.selectionchange)
 
-        self.h_layout.addWidget(self.cb)
-        self.horizontalGroupBox.setLayout(self.h_layout)
+        h_layout.addWidget(self.cb)
+        horizontalGroupBox.setLayout(h_layout)
 
-        self.dataGroupBox = QGroupBox()
+        dataGroupBox = QGroupBox()
         self.dataView = QTreeView()
         self.dataView.setRootIsDecorated(False)
         self.dataView.setAlternatingRowColors(True)
         self.dataView.setSortingEnabled(True)
         dataLayout = QHBoxLayout()
         dataLayout.addWidget(self.dataView)
-        self.dataGroupBox.setLayout(dataLayout)
+        dataGroupBox.setLayout(dataLayout)
 
-        model = self.createCustomerModel(self)
-        self.model = model
-        self.dataView.setModel(model)
+        self.model = self.createCustomerModel(self)
+        self.dataView.setModel(self.model)
         self.update_view()
 
-        self.layout.addWidget(self.dataGroupBox)
-        self.layout.addWidget(self.horizontal_opGroupBox)
-        self.layout.addWidget(self.horizontalGroupBox)
-        self.layout.addWidget(self.horizontal_searchGroupBox)
+        self.layout.addWidget(dataGroupBox)
+        self.layout.addWidget(horizontal_handle_customers_GroupBox)
+        self.layout.addWidget(horizontalGroupBox)
+        self.layout.addWidget(horizontal_searchGroupBox)
 
-    @pyqtSlot()
-    def on_click(self):
-        print("\n")
-        for currentQTableWidgetItem in self.tableWidget.selectedItems():
-            print(currentQTableWidgetItem.row(), currentQTableWidgetItem.column(), currentQTableWidgetItem.text())
+    # @pyqtSlot()
+    # def on_click(self):
+    #     print("\n")
+    #     for currentQTableWidgetItem in self.tableWidget.selectedItems():
+    #         print(currentQTableWidgetItem.row(), currentQTableWidgetItem.column(), currentQTableWidgetItem.text())
 
     @pyqtSlot()
     def modal_onclick(self):
@@ -103,17 +102,17 @@ class CustomerTab(QWidget):
         self.dataView.header().setSectionResizeMode(0, QHeaderView.Stretch);
         self.dataView.header().setSectionResizeMode(1, QHeaderView.Stretch);
 
-    @pyqtSlot()
-    def search(self):
-        textboxValue = self.search_box.text()
-        items = self.tableWidget.findItems(self.search_box.text(), Qt.MatchContains)
-        if items:
-            results = '\n'.join('row %d column %d' % (item.row() + 1, item.column() + 1) for item in items)
-        else:
-            results = 'Found Nothing'
-        QMessageBox.information(self, 'Search Results', results)
-        # QMessageBox.question(self, 'Message - pythonspot.com', "You typed: " + textboxValue, QMessageBox.Ok, QMessageBox.Ok)
-        self.textbox.setText("")
+    # @pyqtSlot()
+    # def search(self):
+    #     textboxValue = self.search_box.text()
+    #     items = self.tableWidget.findItems(self.search_box.text(), Qt.MatchContains)
+    #     if items:
+    #         results = '\n'.join('row %d column %d' % (item.row() + 1, item.column() + 1) for item in items)
+    #     else:
+    #         results = 'Found Nothing'
+    #     QMessageBox.information(self, 'Search Results', results)
+    #     # QMessageBox.question(self, 'Message - pythonspot.com', "You typed: " + textboxValue, QMessageBox.Ok, QMessageBox.Ok)
+    #     self.textbox.setText("")
 
     @pyqtSlot()
     def search_customer(self):
